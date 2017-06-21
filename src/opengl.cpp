@@ -19,6 +19,7 @@ void	init();
 void	display_callback();
 void	timer_callback(int val);
 void	reshape_callback(int w, int h);
+void	keyboard_callback(int key, int mouseX, int mouseY);
 
 int main(int argc, char **argv)
 {
@@ -30,12 +31,16 @@ int main(int argc, char **argv)
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("SNAKE");
 	glutDisplayFunc(display_callback);
-	//called whenever the get created, window is resized or moved.
+	
+	//called whenever the window get created, window is resized or moved.
 	glutReshapeFunc(reshape_callback);
 
 	//registers a callback that
 	//executes everytime x amount of mses has passed
 	glutTimerFunc(0, timer_callback, 0);
+
+	//keyboard callback, to capture key presses
+	glutSpecialFunc(keyboard_callback);
 	init();
 	//calls all the necessary callbacks
 	glutMainLoop();
@@ -52,7 +57,7 @@ void	timer_callback(int)
 {
 	//calls the display function everytime
 	glutPostRedisplay();
-	glutTimerFunc(100 / FPS, timer_callback, 0);
+	glutTimerFunc(1000 / FPS, timer_callback, 0);
 }
 
 void	reshape_callback(int w, int h)
@@ -70,5 +75,11 @@ void	display_callback()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//draw a grid before swapping display buffers.
 	drawGrid();
+	drawSnake();
 	glutSwapBuffers();
+}
+
+void	keyboard_callback(int key, int, int)
+{
+
 }

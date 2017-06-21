@@ -18,5 +18,7 @@
 # include <OpenGl/gl.h>
 
 void drawGrid();
+void drawSnake();
+void drawUnit(int x, int y);
 void initGrid(int x, int y);
 #endif

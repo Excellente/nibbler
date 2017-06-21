@@ -13,8 +13,12 @@
 #include "game.hpp"
 
 int gridX, gridY;
-void drawUnit(int x, int y);
 
+int animationVar = 1;
+//snake blocks position
+int snakeX = 20, snakeY = 20;
+
+//initialiazes the grid dimensions
 void initGrid(int x, int y)
 {
     gridX = x;
@@ -31,6 +35,12 @@ void drawGrid()
     }
 }
 
+void drawSnake()
+{
+    //draws a rectangle
+	glRectd(snakeX, snakeY, 1, 21);
+}
+
 //draws single square unit given a point
 void drawUnit(int x, int y)
 {
@@ -38,7 +48,7 @@ void drawUnit(int x, int y)
     if ((x == 0 || y == 0) || (x == gridX - 1 || y == gridY - 1))
     {
         glLineWidth(3.0);
-        glColor3f(1.0, 0.0, 1.0);
+        glColor3f(1.0, 0.5, 0.2);
     }
     else
     {

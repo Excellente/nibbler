@@ -15,6 +15,8 @@
 # define ROW 40
 # define FPS 10
 
+bool gameOver = false;
+
 void	init();
 void	display_callback();
 void	timer_callback(int val);
@@ -28,7 +30,7 @@ int main(int argc, char **argv)
 
 	//using double buffer so as to buffer updates on the windows
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(800, 800);
 	glutCreateWindow("SNAKE");
 	glutDisplayFunc(display_callback);
 	
@@ -76,7 +78,10 @@ void	display_callback()
 	//draw a grid before swapping display buffers.
 	drawGrid();
 	drawSnake();
+	drawFood();
 	glutSwapBuffers();
+	if (gameOver)
+		exit(0);
 }
 
 void	keyboard_callback(int key, int, int)
@@ -100,7 +105,6 @@ void	keyboard_callback(int key, int, int)
 				snake_direction = LEFT;
 			break;
 		case 27:
-			glutPopWindow();
 			exit(0);
 			break;
 	}

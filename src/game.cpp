@@ -14,14 +14,63 @@
 
 int gridX, gridY;
 
+//line width
+float colorInt = 1.0;
+
+//random colors
+float randR = 1.0, randG = 1.0, randB = 1.0;
+
+//animate color
+//float g = 0.4,b = 1.0;
+
+//snake length variable
+int snake_length = 4;
+
+//food var to tell if food needs to reset
+bool food = true;;
+//variables for food coordinate
+int foodX, foodY;
+
 //life of the snake
-int life;
+int life = 1;
 //snake direction
 short snake_direction = RIGHT;
 
 //snake blocks position
-int snakeX = 20;
-int snakeY = 20;
+int snakeX[MAX_LEN] = {20, 20, 20, 20};
+int snakeY[MAX_LEN] = {20, 19, 18, 17};
+
+void drawFood()
+{
+	if (food)
+		random(foodX, foodY);
+	food = false;
+	randColor(randR, randG, randB);
+	glColor3f(randR, randG, randB);
+	glRectf(foodX, foodY, foodX + 1, foodY + 1);
+}
+
+void random(int &x, int &y)
+{
+	int maxX = gridX - 2;
+	int maxY = gridY - 2;
+	int min = 1;
+
+	srand(time(NULL));
+	x = min + rand() % (maxX - min);
+	y = min + rand() % (maxY - min);
+}
+
+void randColor(float &rr, float &rg, float &rb)
+{
+	int max = 1.0;
+	int min = 0.0;
+
+	srand(time(NULL));
+	rr = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
 
 //initialiazes the grid dimensions
 void initGrid(int x, int y)
@@ -42,24 +91,59 @@ void drawGrid()
 
 void drawSnake()
 {
+     for (int i = snake_length - 1; i > 0; i--)
+     {
+	     snakeX[i] = snakeX[i - 1];
+	     snakeY[i] = snakeY[i - 1];
+     }
     //change snake direction
     if (snake_direction == RIGHT)
-        snakeX++;
+        snakeX[0]++;
     else if (snake_direction == LEFT)
-        snakeX--;
+        snakeX[0]--;
     else if (snake_direction == UP)
-        snakeY++;
+        snakeY[0]++;
     else if (snake_direction == DOWN)
-        snakeY--;
+        snakeY[0]--;
     //collison
-    if (snakeX == 0 || snakeY == 0 || snakeX == 40 || snakeY == 40)
+    if (snakeX[0] == 0 || snakeY[0] == 0 || snakeX[0] == (gridX - 1) || snakeY[0] == (gridY - 1))
     {
-        snakeX = 20;
-        snakeY = 20;
+	life -= 1;
+	if (!life)
+		gameOver = true;
+        snakeX[0] = 20;
+        snakeY[0] = 20;
+	snake_length = 4;
         snake_direction = RIGHT;
     }
-    //draws a rectangle
-	glRectd(snakeX, snakeY, snakeX + 1, snakeY + 1);
+    //draws the entire snake body
+    for (int i = 0; i < snake_length - 1; i++)
+    {
+	    if (i == 0)
+		    glColor3f(1.0, 0.0, 0.0);
+	    else
+		    glColor3f(0.0, 0.7, 0.0);
+	    glRectd(snakeX[i], snakeY[i], snakeX[i] + 1, snakeY[i] + 1);
+	    //self collision detected;
+	    if (i != 0 && ((snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i])))
+	    {
+		    life -= 1;
+		    if (!life)
+			    gameOver = true;
+		    snakeX[0] = 20;
+		    snakeY[0] = 20;
+		    snake_length = 4;
+		    snake_direction = RIGHT;
+	    }
+    }
+    if (snakeX[0] == foodX && snakeY[0] == foodY)
+    {
+	    food = true;
+	    if (snake_length < 60)
+		    snake_length += 1;
+	    if (colorInt != 0.0)
+		    colorInt -= 0.09;
+    }
 }
 
 //draws single square unit given a point
@@ -74,7 +158,7 @@ void drawUnit(int x, int y)
     else
     {
         glLineWidth(1.0);
-        glColor3f(0.5, 0.5, 0.5);
+        glColor3f(colorInt, colorInt, colorInt);
     }
 
     //specifiy what geometric object to draw

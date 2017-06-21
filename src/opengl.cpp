@@ -86,18 +86,22 @@ void	keyboard_callback(int key, int, int)
 		case GLUT_KEY_UP:
 			if (snake_direction != DOWN)
 				snake_direction = UP;
-			break ;
+			break;
 		case GLUT_KEY_DOWN:
 			if (snake_direction != UP)
 				snake_direction = DOWN;
-			break ;
+			break;
 		case GLUT_KEY_RIGHT:
 			if (snake_direction != LEFT)
 				snake_direction = RIGHT;
-			break ;
+			break;
 		case GLUT_KEY_LEFT:
 			if (snake_direction != RIGHT)
 				snake_direction = LEFT;
-			break ;
+			break;
+		case 27:
+			glutPopWindow();
+			exit(0);
+			break;
 	}
 }

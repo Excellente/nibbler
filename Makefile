@@ -10,20 +10,33 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC = clang++
-LIBFLAG = -framework OpenGl -framework GLUT
-CFLAGS = -Wall -Wextra -Werror
-DFLAG = -Wno-deprecated
-INC = ./include
+CC	= clang++
+EXE	= viper
+LIBFLAG	= -framework OpenGl -framework GLUT
+CFLAGS	= -Wall -Wextra -Werror
+DFLAG	= -Wno-deprecated
+INC	= ./include
+SRCDIR	= ./src/
+OBDIR	= ./obj/
+SRC	= game.cpp
+OBJ	= $(SRC:.cpp=.o)
+SRCS	= $(addprefix $(SRCDIR), $(SRC))
+OBJS	= $(addprefix $(OBJDIR), $(OBJ))
+OS	:= $(shell uname)
+
+ifeq ($(OS), Darwin)
+	LIBFLAG := -framework OpenGl -framework GLUT
+else
+	LIBFLAG := -lGLU -lGL -lglut
+endif
 
 all:
-	$(CC) *.cpp -I$(INC) $(DFLAG) $(LIBFLAG)
+	$(CC) src/opengl.cpp $(SRCS) -o$(EXE) -I$(INC) $(LIBFLAG)
 
 clean:
-	rm -f a.out
-	rm -f $(OBJ)
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(EXE)
 
-re: flcean all
+re: fclean all

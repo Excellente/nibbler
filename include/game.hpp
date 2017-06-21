@@ -19,9 +19,15 @@
 # define DOWN -1
 # define LEFT -2
 
-# include <OpenGL/glu.h>
+/*
+#include <OpenGL/glu.h>
 # include <GLUT/glut.h>
 # include <OpenGl/gl.h>
+*/
+
+# include <GL/glu.h>
+# include <GL/glut.h>
+# include <GL/gl.h>
 
 extern short snake_direction;
 

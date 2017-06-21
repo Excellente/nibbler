@@ -38,7 +38,7 @@ void drawGrid()
 void drawSnake()
 {
     //draws a rectangle
-	glRectd(snakeX, snakeY, 1, 21);
+	glRectd(snakeX, snakeY, 1, 1);
 }
 
 //draws single square unit given a point

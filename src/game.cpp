@@ -14,9 +14,14 @@
 
 int gridX, gridY;
 
-int animationVar = 1;
+//life of the snake
+int life;
+//snake direction
+short snake_direction = RIGHT;
+
 //snake blocks position
-int snakeX = 20, snakeY = 20;
+int snakeX = 20;
+int snakeY = 20;
 
 //initialiazes the grid dimensions
 void initGrid(int x, int y)
@@ -37,8 +42,24 @@ void drawGrid()
 
 void drawSnake()
 {
+    //change snake direction
+    if (snake_direction == RIGHT)
+        snakeX++;
+    else if (snake_direction == LEFT)
+        snakeX--;
+    else if (snake_direction == UP)
+        snakeY++;
+    else if (snake_direction == DOWN)
+        snakeY--;
+    //collison
+    if (snakeX == 0 || snakeY == 0 || snakeX == 40 || snakeY == 40)
+    {
+        snakeX = 20;
+        snakeY = 20;
+        snake_direction = RIGHT;
+    }
     //draws a rectangle
-	glRectd(snakeX, snakeY, 1, 1);
+	glRectd(snakeX, snakeY, snakeX + 1, snakeY + 1);
 }
 
 //draws single square unit given a point

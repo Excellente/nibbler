@@ -81,5 +81,23 @@ void	display_callback()
 
 void	keyboard_callback(int key, int, int)
 {
-
+	switch (key)
+	{
+		case GLUT_KEY_UP:
+			if (snake_direction != DOWN)
+				snake_direction = UP;
+			break ;
+		case GLUT_KEY_DOWN:
+			if (snake_direction != UP)
+				snake_direction = DOWN;
+			break ;
+		case GLUT_KEY_RIGHT:
+			if (snake_direction != LEFT)
+				snake_direction = RIGHT;
+			break ;
+		case GLUT_KEY_LEFT:
+			if (snake_direction != RIGHT)
+				snake_direction = LEFT;
+			break ;
+	}
 }

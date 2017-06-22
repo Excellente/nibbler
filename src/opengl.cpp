@@ -6,16 +6,17 @@
 /*   By: emsimang <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/21 11:33:57 by emsimang          #+#    #+#             */
-/*   Updated: 2017/06/22 11:10:08 by emsimang         ###   ########.fr       */
+/*   Updated: 2017/06/22 11:58:27 by emsimang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "game.hpp"
 # define COLUMN 40
 # define ROW 40
-# define FPS 10
 
 bool gameOver = false;
+// int snake_speed = 1;
+char *gOver = "Game Over!";
 
 void	init();
 void	display_callback();
@@ -25,8 +26,10 @@ void	keyboard_callback(int key, int mouseX, int mouseY);
 
 int main(int argc, char **argv)
 {
-	//initialize glut, before using the framework
+	IDisplay *swin = new IDisplay();
+	// initialize glut, before using the framework
 	glutInit(&argc, argv);
+	//swin->initialize(&argc, argv);
 
 	//using double buffer so as to buffer updates on the windows
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
@@ -59,7 +62,7 @@ void	timer_callback(int)
 {
 	//calls the display function everytime
 	glutPostRedisplay();
-	glutTimerFunc(1000 / FPS, timer_callback, 0);
+	glutTimerFunc(1000 / snake_speed, timer_callback, 0);
 }
 
 void	reshape_callback(int w, int h)
@@ -69,6 +72,16 @@ void	reshape_callback(int w, int h)
 	glLoadIdentity();
 	glOrtho(0.0, COLUMN, 0.0, ROW, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
+}
+int len = 0;
+void	print(int x, int y, int, char *text)
+{
+	glRasterPos2f(x, y);
+	len = std::strlen(text);
+	for (int i = 0; i < len; i++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, text[i]);
+	}
 }
 
 void	display_callback()
@@ -81,7 +94,11 @@ void	display_callback()
 	drawFood();
 	glutSwapBuffers();
 	if (gameOver)
-		_exit(0);
+	{
+
+		print(20, 20, 0, gOver);
+		EXIT
+	}
 }
 
 void	keyboard_callback(int key, int, int)

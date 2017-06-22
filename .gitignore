@@ -2,7 +2,6 @@
 *.swo
 .DS*
 ._*
-<<<<<<< HEAD
 a.out
-=======
->>>>>>> 3822aa862f4b28fa717feff08fbea9a77899721a
+.vscode*
+*.json

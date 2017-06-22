@@ -6,11 +6,60 @@
 /*   By: emsimang <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/21 11:24:25 by emsimang          #+#    #+#             */
-/*   Updated: 2017/06/21 11:34:47 by emsimang         ###   ########.fr       */
+/*   Updated: 2017/06/22 12:12:33 by emsimang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "game.hpp"
+
+/*
+** object oriented code begin
+*/
+
+// extern "C" void glIntit(int *argc, char **argv)
+// {
+// 	::glutInit(argc, argv);
+// }
+// extern "C" void windowInit()
+// {
+// 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+// 	glutInitWindowSize(800, 800);
+// 	glutCreateWindow("SNAKE");
+// 	glutDisplayFunc(display_callback);
+// }
+
+// IDisplay *instance;
+
+void	IDisplay::display_callback()
+{
+	// 	//updates or resets the color buffer
+	::glClear(GL_COLOR_BUFFER_BIT);
+	//draw a grid before swapping display buffers.
+	// drawGrid();
+	// drawSnake();
+	// drawFood();
+	// glutSwapBuffers();
+	// if (gameOver)
+	// {
+
+	// 	print(20, 20, 0, gOver);
+	// 	EXIT
+	// }
+}
+
+void IDisplay::initialize(int *argc, char **argv)
+{
+	// ::instance = this;
+	::glutInit(argc, argv);
+	::glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	::glutInitWindowSize(800, 800);
+	::glutCreateWindow("SNAKE");
+	::glutDisplayFunc(IDisplay::display_callback);
+}
+
+/*
+** object oriented code end
+*/
 
 int gridX, gridY;
 
@@ -22,17 +71,17 @@ float randR = 1.0, randG = 1.0, randB = 1.0;
 
 //animate color
 float snkR = 0.8, snkG = 0.8, snkB = 0.8;
-
+int snake_speed = 1;
 //snake length variable
 int snake_length = 4;
 
-//food var to tell if food needs to reset
-bool food = true;;
+//food var to tell if food needs to be reset
+bool food = true;
 //variables for food coordinate
 int foodX, foodY;
 
-//life of the snake
-int life = 1;
+//slife of the snake
+int slife = 1;
 //snake direction
 short snake_direction = RIGHT;
 
@@ -45,11 +94,11 @@ void drawFood()
 	if (food)
 	{
 		random(foodX, foodY);
-		for (int i = 0; i < snake_length; i++)
+		/*for (int i = 0; i < snake_length; i++)
 		{
 			if (snakeX[i] == foodX && snakeY[i] == foodY)
 				drawFood();
-		}
+		}*/
 	}
 	food = false;
 	randColor(randR, randG, randB);
@@ -115,8 +164,8 @@ void drawSnake()
     //collison
     if (snakeX[0] == 0 || snakeY[0] == 0 || snakeX[0] == (gridX - 1) || snakeY[0] == (gridY - 1))
     {
-	life -= 1;
-	if (!life)
+	slife -= 1;
+	if (!slife)
 		gameOver = true;
         snakeX[0] = 20;
         snakeY[0] = 20;
@@ -134,8 +183,8 @@ void drawSnake()
 	    //self collision detected;
 	    if (i != 0 && ((snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i])))
 	    {
-		    life -= 1;
-		    if (!life)
+		    slife -= 1;
+		    if (!slife)
 			    gameOver = true;
 		    snakeX[0] = 20;
 		    snakeY[0] = 20;
@@ -154,7 +203,12 @@ void drawSnake()
 	    snkR = randR;
 	    snkG = randG;
 	    snkB = randB;
+		//increase speed
+		snake_speed += 1;
     }
+	printf("____Debugging____\n");
+	printf("snake_length = %d\nsnake_direction = %d\nsnake_spee = %d\n",
+			snake_length, snake_direction, snake_speed);
 }
 
 //draws single square unit given a point

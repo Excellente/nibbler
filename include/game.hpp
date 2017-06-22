@@ -20,15 +20,18 @@
 # define LEFT -2
 
 # define MAX_LEN 60
-/*
+
+#ifdef __APPLE__
+
 #include <OpenGL/glu.h>
 # include <GLUT/glut.h>
 # include <OpenGl/gl.h>
-*/
-
+#else
 # include <GL/glu.h>
 # include <GL/glut.h>
 # include <GL/gl.h>
+#endif
+
 # include <ctime>
 # include <unistd.h>
 

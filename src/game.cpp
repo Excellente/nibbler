@@ -21,7 +21,7 @@ float colorInt = 1.0;
 float randR = 1.0, randG = 1.0, randB = 1.0;
 
 //animate color
-//float g = 0.4,b = 1.0;
+float snkR = 0.8, snkG = 0.8, snkB = 0.8;
 
 //snake length variable
 int snake_length = 4;
@@ -43,7 +43,14 @@ int snakeY[MAX_LEN] = {20, 19, 18, 17};
 void drawFood()
 {
 	if (food)
+	{
 		random(foodX, foodY);
+		for (int i = 0; i < snake_length; i++)
+		{
+			if (snakeX[i] == foodX && snakeY[i] == foodY)
+				drawFood();
+		}
+	}
 	food = false;
 	randColor(randR, randG, randB);
 	glColor3f(randR, randG, randB);
@@ -122,7 +129,7 @@ void drawSnake()
 	    if (i == 0)
 		    glColor3f(1.0, 0.0, 0.0);
 	    else
-		    glColor3f(0.0, 0.7, 0.0);
+		    glColor3f(snkR, snkG, snkB);
 	    glRectd(snakeX[i], snakeY[i], snakeX[i] + 1, snakeY[i] + 1);
 	    //self collision detected;
 	    if (i != 0 && ((snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i])))
@@ -136,6 +143,7 @@ void drawSnake()
 		    snake_direction = RIGHT;
 	    }
     }
+    //snake colliding with food
     if (snakeX[0] == foodX && snakeY[0] == foodY)
     {
 	    food = true;
@@ -143,6 +151,9 @@ void drawSnake()
 		    snake_length += 1;
 	    if (colorInt != 0.0)
 		    colorInt -= 0.09;
+	    snkR = randR;
+	    snkG = randG;
+	    snkB = randB;
     }
 }
 

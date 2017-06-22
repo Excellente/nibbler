@@ -6,7 +6,7 @@
 #    By: emsimang <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/06/21 11:27:01 by emsimang          #+#    #+#              #
-#    Updated: 2017/06/21 11:31:30 by emsimang         ###   ########.fr        #
+#    Updated: 2017/06/22 11:12:17 by emsimang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ else
 endif
 
 all:
-	$(CC) src/opengl.cpp $(SRCS) -o$(EXE) -I$(INC) $(LIBFLAG)
+	$(CC) src/opengl.cpp $(DFLAG) $(SRCS) -o$(EXE) -I$(INC) $(LIBFLAG)
 
 clean:
 	rm -f $(OBJS)

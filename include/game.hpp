@@ -6,7 +6,7 @@
 /*   By: emsimang <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/21 11:24:39 by emsimang          #+#    #+#             */
-/*   Updated: 2017/06/21 11:34:05 by emsimang         ###   ########.fr       */
+/*   Updated: 2017/06/22 11:17:02 by emsimang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 # define MAX_LEN 60
 
 #ifdef __APPLE__
-
-#include <OpenGL/glu.h>
-# include <GLUT/glut.h>
-# include <OpenGl/gl.h>
+	# include <iostream>
+	# include <OpenGL/glu.h>
+	# include <GLUT/glut.h>
+	# include <OpenGl/gl.h>
 #else
-# include <GL/glu.h>
-# include <GL/glut.h>
-# include <GL/gl.h>
+	# include <GL/glu.h>
+	# include <GL/glut.h>
+	# include <GL/gl.h>
 #endif
 
 # include <ctime>

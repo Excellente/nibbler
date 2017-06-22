@@ -6,7 +6,7 @@
 /*   By: emsimang <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/06/21 11:33:57 by emsimang          #+#    #+#             */
-/*   Updated: 2017/06/21 11:34:01 by emsimang         ###   ########.fr       */
+/*   Updated: 2017/06/22 11:10:08 by emsimang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	display_callback()
 	drawFood();
 	glutSwapBuffers();
 	if (gameOver)
-		exit(0);
+		_exit(0);
 }
 
 void	keyboard_callback(int key, int, int)

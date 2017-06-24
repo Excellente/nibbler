@@ -14,21 +14,16 @@
 # define COLUMN 40
 # define ROW 40
 
+Snake s = Snake();
+int gridY = ROW;
+int	gridX = COLUMN;
 bool gpause = false;
 bool gameOver = false;
-char *gOver = "Game Over!";
-void	init();
-void	display_callback();
-void	timer_callback(int val);
-void	reshape_callback(int w, int h);
-void	keyboard_normal(unsigned char key, int x, int y);
-void	keyboard_special(int key, int mouseX, int mouseY);
-Snake s = Snake();
 
 int main(int argc, char **argv)
 {
 	IDisplay *swin = new IDisplay();
-	Snake s = Snake();
+	// Snake s = Snake();
 	// initialize glut, before using the framework
 	glutInit(&argc, argv);
 	//swin->initialize(&argc, argv);
@@ -101,17 +96,12 @@ void	display_callback()
 {
 	//updates or resets the color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
-	//draw a grid before swapping display buffers.
 	drawGrid();
 	s.updateSnake();
-	drawFood();
+	s.getFood().drawFood();
 	glutSwapBuffers();
 	if (gameOver)
-	{
-
-		printf("%s\n", gOver);
-		EXIT
-	}
+		EXIT;
 }
 
 void	keyboard_special(int key, int, int)

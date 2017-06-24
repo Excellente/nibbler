@@ -74,12 +74,8 @@ void	keyboard_normal(unsigned char k, int x, int y)
 
 void	timer_callback(int)
 {
-	//calls the display function everytime
-//	if (!gpause)
-//	{
 	glutPostRedisplay();
 	glutTimerFunc(1000 / s.getSpeed(), timer_callback, 0);
-//	}
 }
 
 void	reshape_callback(int w, int h)
@@ -95,7 +91,7 @@ void	display_callback()
 {
 	//updates or resets the color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
-	drawGrid();
+	drawGrid(s.getScore());
 	s.updateSnake();
 	s.getFood().drawFood();
 	glutSwapBuffers();

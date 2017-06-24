@@ -63,7 +63,7 @@ void IDisplay::initialize(int *argc, char **argv)
  */
 
 //line width
-float gridInt = 1.0;
+float gridInt = 0.618;
 
 //random colors
 float randR = 1.0, randG = 1.0, randB = 1.0;
@@ -164,13 +164,15 @@ Snake::~Snake(){
 Snake::Snake()
 {
 	this->_life = 2;
-	this->_length = 4;
 	this->_speed = 2;
+	this->_length = 4;
 	this->_food = Food();
 	this->_color.snkR = 0.8;
 	this->_color.snkG = 0.8;
 	this->_color.snkB = 0.8;
 	this->_direction = RIGHT;
+	this->_score.high_score = 0;
+	this->_score.current_score = 0;
 	for (int i = 0; i < 4; i++)
 		this->_xCoord[i] = 20;
 	for (int j = 0, i = 20; i > 16; i--, j++)
@@ -185,12 +187,24 @@ int Snake::getSpeed(){
 	return (this->_speed);
 }
 
+t_score Snake::getScore(){
+	return (this->_score);
+}
+
 Food Snake::getFood(){
 	return (this->_food);
 }
 
 s_color Snake::getColor(){
 	return (this->_color);
+}
+
+void Snake::setHighScore(int hs){
+	this->_score.high_score = hs;
+}
+
+void Snake::setScore(int s){
+	this->_score.current_score = s;
 }
 
 void Snake::setSpeed(int s){
@@ -223,6 +237,7 @@ void Snake::collision()
 	this->_xCoord[0] = 20;
 	this->_yCoord[0] = 20;
 	this->_direction = RIGHT;
+	this->_score.current_score = 0;
 }
 
 void Snake::moveBody()
@@ -253,7 +268,7 @@ void Snake::moveHead()
 void Snake::drawSnake()
 {
 
-	for (int i = 0; i < this->_length - 1; i++)
+	for (int i = 0; i < this->_length; i++)
 	{
 		if (i == 0 || (((this->_xCoord[i] == this->_xCoord[0])
 		&& (this->_yCoord[i] == this->_yCoord[0])) && gpause))
@@ -279,7 +294,10 @@ void Snake::updateSnake()
 	if (this->_xCoord[0] == foodX && this->_yCoord[0] == foodY)
 	{
 		food = true;
+		this->_score.current_score += 4;
 		this->_speed += 1;
+		if (this->_score.high_score < this->_score.current_score)
+			this->setHighScore(this->_score.current_score);
 		if (this->_length < 60)
 			this->_length += 1;
 		if (gridInt != 0.0)
@@ -287,8 +305,8 @@ void Snake::updateSnake()
 		this->setColor(randR, randG, randB);
 	}
 	printf("____Debugging____\n");
-	printf("snake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
-			this->_length, this->_direction, this->_speed);
+	printf("score = %d\nsnake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
+		   this->_score.current_score, this->_length, this->_direction, this->_speed);
 }
 
 
@@ -325,21 +343,49 @@ void initGrid(int x, int y)
 	gridY = y;
 }
 
-//draws an entire grid
-void drawGrid()
+void print(int x, int y,int z, char *string)
 {
+	//set the position of the text in the window using the x and y coordinates
+	glRasterPos2f(x,y);
+	//get the length of the string to display
+	int len = (int) strlen(string);
+
+	//loop to display character by character
+	for (int i = 0; i < len; i++) 
+	{
+		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, string[i]);
+	}
+}
+
+//draws an entire grid
+void drawGrid(t_score sc)
+{
+	char high[10] = {'\0'};
+	char score[10] = {'\0'};
+	sprintf(high, "%d", sc.high_score);
+	sprintf(score, "%d", sc.current_score);
 	for (int i = 0; i < gridX; i++)
 	{
-		for (int j = 0; j < gridY; j++)
+		for (int j = 0; j < gridY - 2; j++)
 			drawUnit(i, j);
 	}
+	glColor3f(0.3, 0.5, 0.2);
+	print(1, 39, -10, "press p to pause game");
+	glColor3f(1.0, 1.0, 1.0);
+	print(12, 39, 0, "score");
+	glColor3f(1.0, 0.6, 0.0);
+	print(15, 39, 0, score);
+	glColor3f(1.0, 1.0, 1.0);
+	print(18, 39, 0, "high score");
+	glColor3f(1.0, 0.6, 0.0);
+	print(23, 39, 0, high);
 }
 
 //draws single square unit given a point
 void drawUnit(int x, int y)
 {
 	//condition to draw border differently
-	if ((x == 0 || y == 0) || (x == gridX - 1 || y == gridY - 1))
+	if ((x == 0 || y == 0) || (x == gridX - 1 || y == gridY - 3))
 	{
 		glLineWidth(3.0);
 		glColor3f(1.0, 0.5, 0.2);

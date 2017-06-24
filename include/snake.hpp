@@ -1,12 +1,18 @@
 #ifndef SNAKE_H
 # define SNAKE_H
 
-typedef		struct	s_color
+typedef	struct	s_color
 {
 	float snkR;
 	float snkG;
 	float snkB;
 }					o_color;
+
+typedef	struct	s_score
+{
+	int high_score;
+	int current_score;
+}				t_score;
 
 class Food
 {
@@ -43,6 +49,7 @@ class Snake
 		int     _yCoord[MAX_LEN];
         Food    _food;
 		o_color _color;
+		t_score _score;
 
 	public:
 		Snake();
@@ -52,12 +59,15 @@ class Snake
 		void	moveHead();
 		void	moveBody();
 		int     getSpeed();
+		t_score	getScore();
 		void	collision();
 		void	drawSnake();
 		void	updateSnake();
 		int     getDirection();
 		void	setSpeed(int s);
+		void	setScore(int s);
 		void	setDirection(int d);
+		void	setHighScore(int hs);
 		void	setColor(float r, float g, float b);
 };
 

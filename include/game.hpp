@@ -64,8 +64,8 @@ class IDisplay
 
 };
 
-void drawGrid();
 void drawFood();
+void drawGrid(t_score s);
 void random(int &x, int &y);
 void drawUnit(int x, int y);
 void initGrid(int x, int y);

@@ -6,7 +6,7 @@
 #    By: emsimang <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/06/21 11:27:01 by emsimang          #+#    #+#              #
-#    Updated: 2017/06/22 11:12:17 by emsimang         ###   ########.fr        #
+#    Updated: 2017/06/24 21:25:42 by emsimang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,5 +43,8 @@ git:
 	git add *
 	git commit -m "all ready"
 	git push origin master
+
+viper: all
+	./$(EXE)
 
 re: fclean all

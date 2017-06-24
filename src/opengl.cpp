@@ -23,7 +23,6 @@ bool gameOver = false;
 int main(int argc, char **argv)
 {
 	IDisplay *swin = new IDisplay();
-	// Snake s = Snake();
 	// initialize glut, before using the framework
 	glutInit(&argc, argv);
 	//swin->initialize(&argc, argv);

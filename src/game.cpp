@@ -107,17 +107,25 @@ float Food::getBlue(){
 	return (this->_color.snkB);	
 }
 
+
 void Food::drawFood()
 {
-	printf("/////////////////////////////////////////////////////////////////////////\n");
-	printf("x: %d\ny: %d\nresetPos %d\n", this->_xCoord, this->_yCoord, food);
-	printf("/////////////////////////////////////////////////////////////////////////\n");
-	if (food/*this->_resetPos == true*/)
-		this->setPos(this->_xCoord, this->_yCoord);
-	food = false;//this->setResetPos(false);
-	this->setColor(this->_color.snkR, this->_color.snkG, this->_color.snkB);
-	glColor3f(this->_color.snkR, this->_color.snkG, this->_color.snkB);
-	glRectf(this->_xCoord, this->_yCoord, this->_xCoord + 1, this->_yCoord + 1);
+	if (food)
+	{
+		this->setPos(foodX, foodY);
+		/*for (int i = 0; i < Snake::getLength(); i++)
+		  {
+		  if (snakeX[i] == foodX && snakeY[i] == foodY)
+		  {
+		  drawFood();
+		  return;
+		  }
+		  }*/
+	}
+	food = false;
+	this->setColor(randR, randG, randB);
+	glColor3f(randR, randG, randB);
+	glRectf(foodX, foodY, foodX + 1, foodY + 1);
 }
 
 void Food::setPos(int &x, int &y)
@@ -145,6 +153,7 @@ void Food::setColor(float &rr, float &rg, float &rb)
 	rg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 	rb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
+
 //////////////////////////////////////////food code end////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////snake code start/////////////////////////////////////////////////////////
@@ -267,19 +276,42 @@ void Snake::updateSnake()
 	|| this->_xCoord[0] == (gridX - 1)
 	|| this->_yCoord[0] == (gridY - 1))
 		this->collision();
-	if (this->_xCoord[0] == this->_food.getXcoord() && this->_yCoord[0] == this->_food.getYcoord())
+	if (this->_xCoord[0] == foodX && this->_yCoord[0] == foodY)
 	{
-		food = false;//this->_food.setResetPos(true);
+		food = true;
 		this->_speed += 1;
 		if (this->_length < 60)
 			this->_length += 1;
 		if (gridInt != 0.0)
 			gridInt -= 0.09;
-		this->setColor(this->_food.getRed(), this->_food.getGreen(), this->_food.getBlue());
+		this->setColor(randR, randG, randB);
 	}
-	// printf("____Debugging____\n");
-	// printf("snake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
-	// 		this->_length, this->_direction, this->_speed);
+	printf("____Debugging____\n");
+	printf("snake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
+			this->_length, this->_direction, this->_speed);
+}
+
+
+void random(int &x, int &y)
+{
+	int maxX = gridX - 2;
+	int maxY = gridY - 2;
+	int min = 1;
+
+	srand(time(NULL));
+	x = min + rand() % (maxX - min);
+	y = min + rand() % (maxY - min);
+}
+
+void randColor(float &rr, float &rg, float &rb)
+{
+	int max = 1.0;
+	int min = 0.0;
+
+	srand(time(NULL));
+	rr = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
 /*

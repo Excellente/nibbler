@@ -14,19 +14,21 @@
 # define COLUMN 40
 # define ROW 40
 
+bool gpause = false;
 bool gameOver = false;
-// int snake_speed = 1;
 char *gOver = "Game Over!";
-
 void	init();
 void	display_callback();
 void	timer_callback(int val);
 void	reshape_callback(int w, int h);
-void	keyboard_callback(int key, int mouseX, int mouseY);
+void	keyboard_normal(unsigned char key, int x, int y);
+void	keyboard_special(int key, int mouseX, int mouseY);
+Snake s = Snake();
 
 int main(int argc, char **argv)
 {
 	IDisplay *swin = new IDisplay();
+	Snake s = Snake();
 	// initialize glut, before using the framework
 	glutInit(&argc, argv);
 	//swin->initialize(&argc, argv);
@@ -36,7 +38,6 @@ int main(int argc, char **argv)
 	glutInitWindowSize(800, 800);
 	glutCreateWindow("SNAKE");
 	glutDisplayFunc(display_callback);
-	
 	//called whenever the window get created, window is resized or moved.
 	glutReshapeFunc(reshape_callback);
 
@@ -45,7 +46,8 @@ int main(int argc, char **argv)
 	glutTimerFunc(0, timer_callback, 0);
 
 	//keyboard callback, to capture key presses
-	glutSpecialFunc(keyboard_callback);
+	glutKeyboardFunc(keyboard_normal);
+	glutSpecialFunc(keyboard_special);
 	init();
 	//calls all the necessary callbacks
 	glutMainLoop();
@@ -58,11 +60,32 @@ void	init()
 	initGrid(COLUMN, ROW);
 }
 
+void	keyboard_normal(unsigned char k, int x, int y)
+{
+	switch (k)
+	{
+		case 80:
+		case 112:
+			printf("pressed key: %d :: bool %d\n", k, gpause);
+			if (gpause == true)
+				gpause = false;
+			else
+				gpause = true;
+			break;
+		case 27:
+			exit(0);
+			break;
+	}
+}
+
 void	timer_callback(int)
 {
 	//calls the display function everytime
+//	if (!gpause)
+//	{
 	glutPostRedisplay();
-	glutTimerFunc(1000 / snake_speed, timer_callback, 0);
+	glutTimerFunc(1000 / s.getSpeed(), timer_callback, 0);
+//	}
 }
 
 void	reshape_callback(int w, int h)
@@ -73,16 +96,6 @@ void	reshape_callback(int w, int h)
 	glOrtho(0.0, COLUMN, 0.0, ROW, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 }
-int len = 0;
-void	print(int x, int y, int, char *text)
-{
-	glRasterPos2f(x, y);
-	len = std::strlen(text);
-	for (int i = 0; i < len; i++)
-	{
-		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, text[i]);
-	}
-}
 
 void	display_callback()
 {
@@ -90,39 +103,43 @@ void	display_callback()
 	glClear(GL_COLOR_BUFFER_BIT);
 	//draw a grid before swapping display buffers.
 	drawGrid();
-	drawSnake();
+	s.updateSnake();
 	drawFood();
 	glutSwapBuffers();
 	if (gameOver)
 	{
 
-		print(20, 20, 0, gOver);
+		printf("%s\n", gOver);
 		EXIT
 	}
 }
 
-void	keyboard_callback(int key, int, int)
+void	keyboard_special(int key, int, int)
 {
+	if (!gpause)
 	switch (key)
 	{
 		case GLUT_KEY_UP:
-			if (snake_direction != DOWN)
-				snake_direction = UP;
+			if (s.getDirection() != DOWN)
+				s.setDirection(UP);
 			break;
 		case GLUT_KEY_DOWN:
-			if (snake_direction != UP)
-				snake_direction = DOWN;
+			if (s.getDirection() != UP)
+				s.setDirection(DOWN);
 			break;
 		case GLUT_KEY_RIGHT:
-			if (snake_direction != LEFT)
-				snake_direction = RIGHT;
+			if (s.getDirection() != LEFT)
+				s.setDirection(RIGHT);
 			break;
 		case GLUT_KEY_LEFT:
-			if (snake_direction != RIGHT)
-				snake_direction = LEFT;
+			if (s.getDirection() != RIGHT)
+				s.setDirection(LEFT);
 			break;
-		case 27:
+		case GLUT_KEY_ESC:
 			exit(0);
 			break;
-	}
+		defualt:
+			printf("pressed key: %d\n", key);
+			break;
+	}	
 }

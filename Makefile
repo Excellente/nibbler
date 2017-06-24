@@ -39,4 +39,9 @@ clean:
 fclean: clean
 	rm -f $(EXE)
 
+git:
+	git add *
+	git commit -m "all ready"
+	git push origin master
+
 re: fclean all

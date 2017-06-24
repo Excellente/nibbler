@@ -13,26 +13,27 @@
 #include "game.hpp"
 
 /*
-** object oriented code begin
-*/
+ ** object oriented code begin
+ */
 
-// extern "C" void glIntit(int *argc, char **argv)
-// {
-// 	::glutInit(argc, argv);
-// }
-// extern "C" void windowInit()
-// {
-// 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-// 	glutInitWindowSize(800, 800);
-// 	glutCreateWindow("SNAKE");
-// 	glutDisplayFunc(display_callback);
-// }
+IDisplay *instance;
 
-// IDisplay *instance;
+void glIntit(int *argc, char **argv)
+{
+	::glutInit(argc, argv);
+}
+
+/*void windowInit()
+  {
+  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+  glutInitWindowSize(800, 800);
+  glutCreateWindow("SNAKE");
+  glutDisplayFunc(display_callback);
+  }*/
 
 void	IDisplay::display_callback()
 {
-	// 	//updates or resets the color buffer
+	//updates or resets the color buffer
 	::glClear(GL_COLOR_BUFFER_BIT);
 	//draw a grid before swapping display buffers.
 	// drawGrid();
@@ -49,7 +50,7 @@ void	IDisplay::display_callback()
 
 void IDisplay::initialize(int *argc, char **argv)
 {
-	// ::instance = this;
+	::instance = this;
 	::glutInit(argc, argv);
 	::glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 	::glutInitWindowSize(800, 800);
@@ -58,47 +59,170 @@ void IDisplay::initialize(int *argc, char **argv)
 }
 
 /*
-** object oriented code end
-*/
+ ** object oriented code end
+ */
 
 int gridX, gridY;
 
 //line width
-float colorInt = 1.0;
+float gridInt = 1.0;
 
 //random colors
 float randR = 1.0, randG = 1.0, randB = 1.0;
-
-//animate color
-float snkR = 0.8, snkG = 0.8, snkB = 0.8;
-int snake_speed = 1;
-//snake length variable
-int snake_length = 4;
 
 //food var to tell if food needs to be reset
 bool food = true;
 //variables for food coordinate
 int foodX, foodY;
 
-//slife of the snake
-int slife = 1;
-//snake direction
-short snake_direction = RIGHT;
+/*
+ **snake object code start
+ */
 
-//snake blocks position
-int snakeX[MAX_LEN] = {20, 20, 20, 20};
-int snakeY[MAX_LEN] = {20, 19, 18, 17};
+Snake::~Snake(){
+}
+
+Snake::Snake()
+{
+	this->_life = 2;
+	this->_length = 4;
+	this->_speed = 2;
+	this->_color.snkR = 0.8;
+	this->_color.snkG = 0.8;
+	this->_color.snkB = 0.8;
+	this->_direction = RIGHT;
+	for (int i = 0; i < 4; i++)
+		this->_xCoord[i] = 20;
+	for (int j = 0, i = 20; i > 16; i--, j++)
+		this->_yCoord[j] = i;
+}
+
+int Snake::getDirection(){
+	return (this->_direction);
+}
+
+int Snake::getSpeed(){
+	return (this->_speed);
+}
+
+s_color Snake::getColor(){
+	return (this->_color);
+}
+
+void Snake::setSpeed(int s){
+	this->_speed = s;
+}
+
+void Snake::setDirection(int d){
+	this->_direction = d;
+}
+
+void Snake::setColor(float r, float g, float b)
+{
+	this->_color.snkR = r;
+	this->_color.snkG = g;
+	this->_color.snkB = b;
+}
+
+void Snake::collision()
+{
+
+	gridInt  = 1.0;
+	this->_life -= 1;
+	if (!this->_life)
+	{
+		this->_isAlive = false;
+		gameOver = true;
+	}
+	this->_speed = 2;
+	this->_length = 4;
+	this->_xCoord[0] = 20;
+	this->_yCoord[0] = 20;
+	this->_direction = RIGHT;
+}
+
+void Snake::moveBody()
+{
+
+	for (int i = this->_length - 1; i > 0; i--)
+	{
+		this->_xCoord[i] = this->_xCoord[i - 1];
+		this->_yCoord[i] = this->_yCoord[i - 1];
+	}
+}
+
+void Snake::moveHead()
+{
+	if (!gpause)
+	{
+		if (this->_direction == RIGHT)
+			this->_xCoord[0]++;
+		else if (this->_direction == LEFT)
+			this->_xCoord[0]--;
+		else if (this->_direction == UP)
+			this->_yCoord[0]++;
+		else if (this->_direction == DOWN)
+			this->_yCoord[0]--;
+	}
+}
+
+void Snake::drawSnake()
+{
+
+	for (int i = 0; i < this->_length - 1; i++)
+	{
+		if (i == 0)
+			glColor3f(1.0, 0.0, 0.0);
+		else
+			glColor3f(this->_color.snkR, this->_color.snkG, this->_color.snkB);
+		glRectd(this->_xCoord[i], this->_yCoord[i], this->_xCoord[i] + 1, this->_yCoord[i] + 1);
+		if (i != 0 && ((this->_xCoord[0] == this->_xCoord[i])
+					&& (this->_yCoord[0] == this->_yCoord[i])) && !gpause)
+			this->collision();
+	}
+}
+
+void Snake::updateSnake()
+{
+	this->moveBody();
+	this->moveHead();
+	this->drawSnake();
+	if (this->_xCoord[0] == 0 || this->_yCoord[0] == 0 
+	|| this->_xCoord[0] == (gridX - 1)
+	|| this->_yCoord[0] == (gridY - 1))
+		this->collision();
+	if (this->_xCoord[0] == foodX && this->_yCoord[0] == foodY)
+	{
+		food = true;
+		this->_speed += 1;
+		if (this->_length < 60)
+			this->_length += 1;
+		if (gridInt != 0.0)
+			gridInt -= 0.09;
+		this->setColor(randR, randG, randB);
+	}
+	printf("____Debugging____\n");
+	printf("snake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
+			this->_length, this->_direction, this->_speed);
+}
+
+/*
+ **snake object code end
+ */
 
 void drawFood()
 {
 	if (food)
 	{
 		random(foodX, foodY);
-		/*for (int i = 0; i < snake_length; i++)
-		{
-			if (snakeX[i] == foodX && snakeY[i] == foodY)
-				drawFood();
-		}*/
+		/*for (int i = 0; i < Snake::getLength(); i++)
+		  {
+		  if (snakeX[i] == foodX && snakeY[i] == foodY)
+		  {
+		  drawFood();
+		  return;
+		  }
+		  }*/
 	}
 	food = false;
 	randColor(randR, randG, randB);
@@ -131,111 +255,45 @@ void randColor(float &rr, float &rg, float &rb)
 //initialiazes the grid dimensions
 void initGrid(int x, int y)
 {
-    gridX = x;
-    gridY = y;
+	gridX = x;
+	gridY = y;
 }
 
 //draws an entire grid
 void drawGrid()
 {
-    for (int i = 0; i < gridX; i++)
-    {
-        for (int j = 0; j < gridY; j++)
-            drawUnit(i, j);
-    }
-}
-
-void drawSnake()
-{
-     for (int i = snake_length - 1; i > 0; i--)
-     {
-	     snakeX[i] = snakeX[i - 1];
-	     snakeY[i] = snakeY[i - 1];
-     }
-    //change snake direction
-    if (snake_direction == RIGHT)
-        snakeX[0]++;
-    else if (snake_direction == LEFT)
-        snakeX[0]--;
-    else if (snake_direction == UP)
-        snakeY[0]++;
-    else if (snake_direction == DOWN)
-        snakeY[0]--;
-    //collison
-    if (snakeX[0] == 0 || snakeY[0] == 0 || snakeX[0] == (gridX - 1) || snakeY[0] == (gridY - 1))
-    {
-	slife -= 1;
-	if (!slife)
-		gameOver = true;
-        snakeX[0] = 20;
-        snakeY[0] = 20;
-	snake_length = 4;
-        snake_direction = RIGHT;
-    }
-    //draws the entire snake body
-    for (int i = 0; i < snake_length - 1; i++)
-    {
-	    if (i == 0)
-		    glColor3f(1.0, 0.0, 0.0);
-	    else
-		    glColor3f(snkR, snkG, snkB);
-	    glRectd(snakeX[i], snakeY[i], snakeX[i] + 1, snakeY[i] + 1);
-	    //self collision detected;
-	    if (i != 0 && ((snakeX[0] == snakeX[i]) && (snakeY[0] == snakeY[i])))
-	    {
-		    slife -= 1;
-		    if (!slife)
-			    gameOver = true;
-		    snakeX[0] = 20;
-		    snakeY[0] = 20;
-		    snake_length = 4;
-		    snake_direction = RIGHT;
-	    }
-    }
-    //snake colliding with food
-    if (snakeX[0] == foodX && snakeY[0] == foodY)
-    {
-	    food = true;
-	    if (snake_length < 60)
-		    snake_length += 1;
-	    if (colorInt != 0.0)
-		    colorInt -= 0.09;
-	    snkR = randR;
-	    snkG = randG;
-	    snkB = randB;
-		//increase speed
-		snake_speed += 1;
-    }
-	printf("____Debugging____\n");
-	printf("snake_length = %d\nsnake_direction = %d\nsnake_spee = %d\n",
-			snake_length, snake_direction, snake_speed);
+	for (int i = 0; i < gridX; i++)
+	{
+		for (int j = 0; j < gridY; j++)
+			drawUnit(i, j);
+	}
 }
 
 //draws single square unit given a point
 void drawUnit(int x, int y)
 {
-    //condition to draw border differently
-    if ((x == 0 || y == 0) || (x == gridX - 1 || y == gridY - 1))
-    {
-        glLineWidth(3.0);
-        glColor3f(1.0, 0.5, 0.2);
-    }
-    else
-    {
-        glLineWidth(1.0);
-        glColor3f(colorInt, colorInt, colorInt);
-    }
+	//condition to draw border differently
+	if ((x == 0 || y == 0) || (x == gridX - 1 || y == gridY - 1))
+	{
+		glLineWidth(3.0);
+		glColor3f(1.0, 0.5, 0.2);
+	}
+	else
+	{
+		glLineWidth(1.0);
+		glColor3f(gridInt, gridInt, gridInt);
+	}
 
-    //specifiy what geometric object to draw
-    //gl_line_loop draws a connected object. 
-    glBegin(GL_LINE_LOOP);
-    
-    //draws a vertes at a specified point
-    glVertex2f(x, y);
-    glVertex2f(x + 1, y);
-    glVertex2f(x + 1, y + 1);
-    glVertex2f(x, y + 1);
+	//specifiy what geometric object to draw
+	//gl_line_loop draws a connected object. 
+	glBegin(GL_LINE_LOOP);
 
-    //ends the drawing of a particular geometric object
-    glEnd();
+	//draws a vertes at a specified point
+	glVertex2f(x, y);
+	glVertex2f(x + 1, y);
+	glVertex2f(x + 1, y + 1);
+	glVertex2f(x, y + 1);
+
+	//ends the drawing of a particular geometric object
+	glEnd();
 }

@@ -13,11 +13,14 @@
 #ifndef GAME_H
 # define GAME_H
 
-//constants to check for the snake direction
+//direction constants
 # define UP 1
 # define RIGHT 2
 # define DOWN -1
 # define LEFT -2
+
+# define GLUT_KEY_ESC 27
+# define GLUT_KEY_LCA 97
 
 # define MAX_LEN 60
 # define MAX_SPEED 50
@@ -36,13 +39,13 @@
 #endif
 
 # include <ctime>
+# include <vector>
+# include <stdio.h>
 # include <unistd.h>
 # include <string.h>
 
-extern int life;
+extern bool gpause;
 extern bool gameOver;
-extern int snake_speed;
-extern short snake_direction;
 
 typedef		struct	s_snakeColor
 {
@@ -50,6 +53,13 @@ typedef		struct	s_snakeColor
 	float snkG;
 	float snkB;
 }					t_sColor;
+
+typedef	struct	s_color
+{
+	float snkR;
+	float snkG;
+	float snkB;
+}		s_color;
 
 class IDisplay
 {
@@ -67,8 +77,35 @@ class IDisplay
 
 };
 
+class Snake
+{
+	private:
+		short	_life;
+		int	_speed;
+		int	_length;
+		bool	_isAlive;
+		int	_direction;
+		int	_xCoord[MAX_LEN];
+		int	_yCoord[MAX_LEN];
+		s_color _color;
+	public:
+		Snake();
+		~Snake();
+		void	moveHead();
+		void	moveBody();
+		int	getSpeed();
+		void	collision();
+		void	drawSnake();
+		void	updateSnake();
+		int	getDirection();
+		void	setSpeed(int s);
+		void	setDirection(int d);
+		s_color	getColor();
+		void	setColor(float r, float g, float b);
+};
+
 void drawGrid();
-void drawSnake();
+//void drawSnake();
 void drawFood();
 void random(int &x, int &y);
 void drawUnit(int x, int y);

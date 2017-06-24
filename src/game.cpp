@@ -171,7 +171,8 @@ void Snake::drawSnake()
 
 	for (int i = 0; i < this->_length - 1; i++)
 	{
-		if (i == 0)
+		if (i == 0 || (((this->_xCoord[i] == this->_xCoord[0])
+		&& (this->_yCoord[i] == this->_yCoord[0])) && gpause))
 			glColor3f(1.0, 0.0, 0.0);
 		else
 			glColor3f(this->_color.snkR, this->_color.snkG, this->_color.snkB);

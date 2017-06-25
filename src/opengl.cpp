@@ -22,15 +22,15 @@ bool gameOver = false;
 
 int main(int argc, char **argv)
 {
-	IDisplay *swin = new IDisplay();
+	IDisplay *iwin = new IDisplay();
 	// initialize glut, before using the framework
-	glutInit(&argc, argv);
-	//swin->initialize(&argc, argv);
+	// glutInit(&argc, argv);
+	iwin->initialize(&argc, argv);
 
 	//using double buffer so as to buffer updates on the windows
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	glutInitWindowSize(800, 800);
-	glutCreateWindow("SNAKE");
+	// glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	// glutInitWindowSize(800, 800);
+	// glutCreateWindow("SNAKE");
 	glutDisplayFunc(display_callback);
 	//called whenever the window get created, window is resized or moved.
 	glutReshapeFunc(reshape_callback);

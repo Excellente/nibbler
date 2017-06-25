@@ -31,7 +31,7 @@ class Food
 		void    drawFood();
 		void    setColor();
         int     getXcoord();
-        int     getYcoord();        
+        int     getYcoord();
         void    setResetPos(bool b);
 		void    setPos(int &x, int &y);
 		void    setColor(float &rr, float &rg, float &rb);
@@ -54,6 +54,7 @@ class Snake
 	public:
 		Snake();
 		~Snake();
+		void	reset();
         Food    getFood();
 		s_color	getColor();
 		void	moveHead();

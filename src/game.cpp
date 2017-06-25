@@ -55,7 +55,7 @@ void IDisplay::initialize(int *argc, char **argv)
 	::glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
 	::glutInitWindowSize(800, 800);
 	::glutCreateWindow("SNAKE");
-	::glutDisplayFunc(IDisplay::display_callback);
+	// ::glutDisplayFunc(IDisplay::display_callback);
 }
 
 /*
@@ -107,21 +107,10 @@ float Food::getBlue(){
 	return (this->_color.snkB);	
 }
 
-
 void Food::drawFood()
 {
 	if (food)
-	{
 		this->setPos(foodX, foodY);
-		/*for (int i = 0; i < Snake::getLength(); i++)
-		  {
-		  if (snakeX[i] == foodX && snakeY[i] == foodY)
-		  {
-		  drawFood();
-		  return;
-		  }
-		  }*/
-	}
 	food = false;
 	this->setColor(randR, randG, randB);
 	glColor3f(randR, randG, randB);
@@ -173,10 +162,7 @@ Snake::Snake()
 	this->_direction = RIGHT;
 	this->_score.high_score = 0;
 	this->_score.current_score = 0;
-	for (int i = 0; i < 4; i++)
-		this->_xCoord[i] = 20;
-	for (int j = 0, i = 20; i > 16; i--, j++)
-		this->_yCoord[j] = i;
+	this->reset();
 }
 
 int Snake::getDirection(){
@@ -222,6 +208,14 @@ void Snake::setColor(float r, float g, float b)
 	this->_color.snkB = b;
 }
 
+void Snake::reset()
+{
+	for (int i = 0; i < 4; i++)
+		this->_xCoord[i] = 20;
+	for (int j = 0, i = 20; i > 16; i--, j++)
+		this->_yCoord[j] = i;
+}
+
 void Snake::collision()
 {
 
@@ -234,8 +228,7 @@ void Snake::collision()
 	}
 	this->_speed = 2;
 	this->_length = 4;
-	this->_xCoord[0] = 20;
-	this->_yCoord[0] = 20;
+	this->reset();	
 	this->_direction = RIGHT;
 	this->_score.current_score = 0;
 }
@@ -289,7 +282,7 @@ void Snake::updateSnake()
 	this->drawSnake();
 	if (this->_xCoord[0] == 0 || this->_yCoord[0] == 0 
 	|| this->_xCoord[0] == (gridX - 1)
-	|| this->_yCoord[0] == (gridY - 1))
+	|| this->_yCoord[0] == (gridY - 4))
 		this->collision();
 	if (this->_xCoord[0] == foodX && this->_yCoord[0] == foodY)
 	{

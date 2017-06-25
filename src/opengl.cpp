@@ -12,13 +12,9 @@
 
 #include "game.hpp"
 
-int gridY = ROW;
-int	gridX = COLUMN;
-bool gpause = false;
-bool gameOver = false;
-
 int main(int argc, char **argv)
 {
+
 	ILibrary *iwin = new ILibrary();
 	iwin->initialize(&argc, argv);
 	return (0);

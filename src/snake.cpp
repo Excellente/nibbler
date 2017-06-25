@@ -164,6 +164,14 @@ void Snake::updateSnake()
 Food::~Food(){
 }
 
+Food::Food(Food const &s)
+{
+	this->_resetPos = s._resetPos;
+	this->_color.snkR = s._color.snkR;
+	this->_color.snkR = s._color.snkR;
+	this->_color.snkR = s._color.snkR;
+}
+
 Food::Food()
 {
 	this->_resetPos = false;

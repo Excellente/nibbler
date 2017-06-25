@@ -16,10 +16,11 @@ Snake s = Snake();
 ILibrary *instance;
 float gridInt = 0.618;
 
-void glIntit(int *argc, char **argv)
-{
-	::glutInit(argc, argv);
-}
+int gridY = ROW;
+int	gridX = COLUMN;
+bool gpause = false;
+bool LIB1, LIB2, LIB3;
+bool gameOver = false;
 
 void display()
 {
@@ -69,7 +70,6 @@ void	keyboard_normal(unsigned char k, int x, int y)
 	{
 		case 80:
 		case 112:
-			printf("pressed key: %d :: bool %d\n", k, gpause);
 			if (gpause == true)
 				gpause = false;
 			else
@@ -78,6 +78,24 @@ void	keyboard_normal(unsigned char k, int x, int y)
 		case 27:
 			exit(0);
 			break;
+		case 49:
+			LIB1 = true;
+			LIB2 = false;
+			LIB3 = false;
+			break;
+		case 50:
+			LIB2 = true;
+			LIB1 = false;
+			LIB3 = false;
+			break;
+		case 51:
+			LIB3 = true;
+			LIB2 = false;
+			LIB1 = false;
+			break;
+		default:
+			printf("key: %d not handled\n", k);
+			break;		
 	}
 }
 
@@ -166,7 +184,7 @@ void drawUnit(int x, int y)
 
 	//specifiy what geometric object to draw
 	//gl_line_loop draws a connected object. 
-	glBegin(GL_LINE_LOOP);
+	::glBegin(GL_LINE_LOOP);
 
 	//draws a vertes at a specified point
 	glVertex2f(x, y);

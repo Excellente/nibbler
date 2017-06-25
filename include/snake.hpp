@@ -38,8 +38,9 @@ extern bool food;
 extern float gridInt;
 extern int foodX, foodY;
 extern int gridX, gridY;
-extern float randR, randG, randB;
 extern bool gameOver, gpause;
+extern bool LIB1, LIB2, LIB3;
+extern float randR, randG, randB;
 
 typedef	struct	s_color
 {
@@ -65,6 +66,7 @@ class Food
 	public:
 		Food();
 		~Food();
+		Food(const Food &s);
         float   getRed();
         float   getBlue();
         float   getGreen();

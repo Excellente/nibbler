@@ -6,12 +6,15 @@
 #    By: emsimang <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/06/21 11:27:01 by emsimang          #+#    #+#              #
-#    Updated: 2017/06/25 06:26:07 by emsimang         ###   ########.fr        #
+#    Updated: 2017/06/25 18:16:39 by emsimang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC	= clang++
 EXE	= viper
+LIB1 = lib1.so
+LIB2 = lib2.so
+LIB3 = lib3.so
 LIBFLAG	= -framework OpenGl -framework GLUT
 CFLAGS	= -Wall -Wextra -Werror
 DFLAG	= -Wno-deprecated
@@ -31,12 +34,19 @@ else
 endif
 
 all:
-	$(CC) src/opengl.cpp $(DFLAG) $(SRCS) -o$(EXE) -I$(INC) $(LIBFLAG)
+	$(CC) src/opengl.cpp $(DFLAG) $(SRCS) -o $(EXE) -I$(INC) $(LIBFLAG)
+
+MLIB1:
+	$(CC) $(SRCS) -c -I$(INC) $(DFLAG) $(LIBFLAGS)
+	$(CC) $(OBJ) -shared -fPIC -o $(LIB1) -I $(INC) $(DFLAG) $(LIBFLAGS)
 
 clean:
 	rm -f $(OBJS)
 
 fclean: clean
+	rm -f $(LIB1)
+	rm -f $(LIB2)
+	rm -f $(LIB3)
 	rm -f $(EXE)
 
 git:

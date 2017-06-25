@@ -6,7 +6,7 @@
 #    By: emsimang <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/06/21 11:27:01 by emsimang          #+#    #+#              #
-#    Updated: 2017/06/24 21:25:42 by emsimang         ###   ########.fr        #
+#    Updated: 2017/06/25 06:26:07 by emsimang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ DFLAG	= -Wno-deprecated
 INC	= ./include
 SRCDIR	= ./src/
 OBDIR	= ./obj/
-SRC	= game.cpp
+SRC	= game.cpp snake.cpp
 OBJ	= $(SRC:.cpp=.o)
 SRCS	= $(addprefix $(SRCDIR), $(SRC))
 OBJS	= $(addprefix $(OBJDIR), $(OBJ))

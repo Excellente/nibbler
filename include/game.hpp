@@ -13,40 +13,10 @@
 #ifndef GAME_H
 # define GAME_H
 
-//direction constants
-# define UP 1
-# define RIGHT 2
-# define DOWN -1
-# define LEFT -2
-
-# define GLUT_KEY_ESC 27
-# define GLUT_KEY_LCA 97
-
-# define MAX_LEN 60
-# define MAX_SPEED 50
-
-#ifdef __APPLE__
-	# define EXIT _exit(0)
-	# include <iostream>
-	# include <OpenGL/glu.h>
-	# include <GLUT/glut.h>
-	# include <OpenGl/gl.h>
-#else
-	# define EXIT exit(0)
-	# include <GL/glu.h>
-	# include <GL/glut.h>
-	# include <GL/gl.h>
-#endif
-
-# include <ctime>
-# include <vector>
-# include <stdio.h>
-# include <unistd.h>
-# include <string.h>
 # include "snake.hpp"
 
-extern int gridX, gridY;
-extern bool gameOver, gpause;
+// extern int gridX, gridY;
+// extern bool gameOver, gpause;
 
 class IDisplay
 {

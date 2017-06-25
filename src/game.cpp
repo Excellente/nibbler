@@ -12,27 +12,29 @@
 
 #include "game.hpp"
 
-bool food = true;
-int foodX, foodY;
 float gridInt = 0.618;
-float randR = 1.0, randG = 1.0, randB = 1.0;
 
-IDisplay *instance;
+ILibrary *instance;
 
 void glIntit(int *argc, char **argv)
 {
 	::glutInit(argc, argv);
 }
 
-/*void windowInit()
-  {
-  glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-  glutInitWindowSize(800, 800);
-  glutCreateWindow("SNAKE");
-  glutDisplayFunc(display_callback);
-  }*/
+void display()
+{
+	::glutDisplayFunc(display_callback);
+	::glutReshapeFunc(reshape_callback);
+}
 
-void	IDisplay::display_callback()
+void windowInit()
+{
+	::glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+	::glutInitWindowSize(800, 800);
+	::glutCreateWindow("SNAKE");
+}
+
+void	ILibrary::display_callback()
 {
 	//updates or resets the color buffer
 	::glClear(GL_COLOR_BUFFER_BIT);
@@ -49,87 +51,14 @@ void	IDisplay::display_callback()
 	// }
 }
 
-void IDisplay::initialize(int *argc, char **argv)
+void ILibrary::initialize(int *argc, char **argv)
 {
 	::instance = this;
 	::glutInit(argc, argv);
-	::glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	::glutInitWindowSize(800, 800);
-	::glutCreateWindow("SNAKE");
-	// ::glutDisplayFunc(IDisplay::display_callback);
+	::windowInit();
+	::display();
 }
 
-Food::~Food(){
-}
-
-Food::Food()
-{
-	this->_resetPos = false;
-	this->_color.snkR = 1.0;
-	this->_color.snkG = 1.0;
-	this->_color.snkB = 1.0;
-	this->setPos(this->_xCoord, this->_yCoord);
-}
-
-int Food::getXcoord(){
-	return (this->_xCoord);
-}
-
-int Food::getYcoord(){
-	return (this->_yCoord);
-}
-
-float Food::getRed(){
-	return (this->_color.snkR);
-}
-
-float Food::getGreen(){
-	return (this->_color.snkG);	
-}
-
-float Food::getBlue(){
-	return (this->_color.snkB);	
-}
-
-void Food::drawFood()
-{
-	if (food)
-		this->setPos(foodX, foodY);
-	food = false;
-	this->setColor(randR, randG, randB);
-	glColor3f(randR, randG, randB);
-	glRectf(foodX, foodY, foodX + 1, foodY + 1);
-}
-
-void Food::setPos(int &x, int &y)
-{
-	int maxX = gridX - 2;
-	int maxY = gridY - 2;
-	int min = 1;
-
-	srand(time(NULL));
-	x = min + rand() % (maxX - min);
-	y = min + rand() % (maxY - min);
-}
-
-void Food::setResetPos(bool b){
-	this->_resetPos = b;
-}
-
-void Food::setColor(float &rr, float &rg, float &rb)
-{
-	int max = 1.0;
-	int min = 0.0;
-
-	srand(time(NULL));
-	rr = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	rg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-	rb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-}
-
-//////////////////////////////////////////food code end////////////////////////////////////////////////////////////
-
-//initialiazes the grid dimensions
 void initGrid(int x, int y)
 {
 	gridX = x;
@@ -145,6 +74,7 @@ void print(int x, int y,int z, char *string)
 		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, string[i]);
 
 }
+
 
 //draws an entire grid
 void drawGrid(t_score sc)
@@ -168,6 +98,15 @@ void drawGrid(t_score sc)
 	print(18, 39, 0, "high score");
 	glColor3f(1.0, 0.6, 0.0);
 	print(23, 39, 0, high);
+}
+
+void	reshape_callback(int w, int h)
+{
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0.0, COLUMN, 0.0, ROW, -1.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
 }
 
 //draws single square unit given a point

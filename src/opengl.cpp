@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "game.hpp"
-# define COLUMN 40
-# define ROW 40
 
 Snake s = Snake();
 int gridY = ROW;
@@ -22,18 +20,10 @@ bool gameOver = false;
 
 int main(int argc, char **argv)
 {
-	IDisplay *iwin = new IDisplay();
-	// initialize glut, before using the framework
-	// glutInit(&argc, argv);
+	ILibrary *iwin = new ILibrary();
 	iwin->initialize(&argc, argv);
-
-	//using double buffer so as to buffer updates on the windows
-	// glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
-	// glutInitWindowSize(800, 800);
-	// glutCreateWindow("SNAKE");
-	glutDisplayFunc(display_callback);
 	//called whenever the window get created, window is resized or moved.
-	glutReshapeFunc(reshape_callback);
+	// glutReshapeFunc(reshape_callback);
 
 	//registers a callback that
 	//executes everytime x amount of mses has passed
@@ -76,15 +66,6 @@ void	timer_callback(int)
 {
 	glutPostRedisplay();
 	glutTimerFunc(1000 / s.getSpeed(), timer_callback, 0);
-}
-
-void	reshape_callback(int w, int h)
-{
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0.0, COLUMN, 0.0, ROW, -1.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
 }
 
 void	display_callback()

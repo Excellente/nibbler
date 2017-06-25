@@ -1,6 +1,8 @@
 #ifndef SNAKE_H
 # define SNAKE_H
 
+# define ROW 40
+# define COLUMN 40
 # define MAX_LEN 60
 # define MAX_SPEED 50
 

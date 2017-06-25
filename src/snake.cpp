@@ -1,5 +1,9 @@
 #include "snake.hpp"
 
+bool food = true;
+int foodX, foodY;
+float randR = 1.0, randG = 1.0, randB = 1.0;
+
 Snake::~Snake(){
 }
 
@@ -150,7 +154,77 @@ void Snake::updateSnake()
 			gridInt -= 0.09;
 		this->setColor(randR, randG, randB);
 	}
+    //////////////////////////////////////debugging///////////////////////////////////
 	printf("____Debugging____\n");
 	printf("score = %d\nsnake_length = %d\nsnake_direction = %d\nsnake_speed = %d\n",
 		   this->_score.current_score, this->_length, this->_direction, this->_speed);
+    //////////////////////////////////////debugging///////////////////////////////////
+}
+
+Food::~Food(){
+}
+
+Food::Food()
+{
+	this->_resetPos = false;
+	this->_color.snkR = 1.0;
+	this->_color.snkG = 1.0;
+	this->_color.snkB = 1.0;
+	this->setPos(this->_xCoord, this->_yCoord);
+}
+
+int Food::getXcoord(){
+	return (this->_xCoord);
+}
+
+int Food::getYcoord(){
+	return (this->_yCoord);
+}
+
+float Food::getRed(){
+	return (this->_color.snkR);
+}
+
+float Food::getGreen(){
+	return (this->_color.snkG);	
+}
+
+float Food::getBlue(){
+	return (this->_color.snkB);	
+}
+
+void Food::drawFood()
+{
+	if (food)
+		this->setPos(foodX, foodY);
+	food = false;
+	this->setColor(randR, randG, randB);
+	glColor3f(randR, randG, randB);
+	glRectf(foodX, foodY, foodX + 1, foodY + 1);
+}
+
+void Food::setPos(int &x, int &y)
+{
+	int maxX = gridX - 2;
+	int maxY = gridY - 3;
+	int min = 1;
+
+	srand(time(NULL));
+	x = min + rand() % (maxX - min);
+	y = min + rand() % (maxY - min);
+}
+
+void Food::setResetPos(bool b){
+	this->_resetPos = b;
+}
+
+void Food::setColor(float &rr, float &rg, float &rb)
+{
+	int max = 1.0;
+	int min = 0.0;
+
+	srand(time(NULL));
+	rr = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rg = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	rb = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }

@@ -15,14 +15,11 @@
 
 # include "snake.hpp"
 
-// extern int gridX, gridY;
-// extern bool gameOver, gpause;
-
-class IDisplay
+class ILibrary
 {
 	private:
 		bool gameOver;
-		static IDisplay *instance;
+		static ILibrary *instance;
 	
 	public:
 		void drawGrid();

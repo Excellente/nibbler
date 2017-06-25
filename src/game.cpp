@@ -12,9 +12,9 @@
 
 #include "game.hpp"
 
-float gridInt = 0.618;
-
+Snake s = Snake();
 ILibrary *instance;
+float gridInt = 0.618;
 
 void glIntit(int *argc, char **argv)
 {
@@ -25,6 +25,13 @@ void display()
 {
 	::glutDisplayFunc(display_callback);
 	::glutReshapeFunc(reshape_callback);
+	::glutTimerFunc(0, timer_callback, 0);
+}
+
+void keyboard()
+{
+	::glutKeyboardFunc(keyboard_normal);
+	::glutSpecialFunc(keyboard_special);
 }
 
 void windowInit()
@@ -34,21 +41,15 @@ void windowInit()
 	::glutCreateWindow("SNAKE");
 }
 
-void	ILibrary::display_callback()
+void	init()
 {
-	//updates or resets the color buffer
-	::glClear(GL_COLOR_BUFFER_BIT);
-	//draw a grid before swapping display buffers.
-	// drawGrid();
-	// drawSnake();
-	// drawFood();
-	// glutSwapBuffers();
-	// if (gameOver)
-	// {
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	initGrid(COLUMN, ROW);
+}
 
-	// 	print(20, 20, 0, gOver);
-	// 	EXIT
-	// }
+void	eventLoop()
+{
+	::glutMainLoop();
 }
 
 void ILibrary::initialize(int *argc, char **argv)
@@ -57,6 +58,39 @@ void ILibrary::initialize(int *argc, char **argv)
 	::glutInit(argc, argv);
 	::windowInit();
 	::display();
+	::keyboard();
+	::init();
+	::eventLoop();
+}
+
+void	keyboard_normal(unsigned char k, int x, int y)
+{
+	switch (k)
+	{
+		case 80:
+		case 112:
+			printf("pressed key: %d :: bool %d\n", k, gpause);
+			if (gpause == true)
+				gpause = false;
+			else
+				gpause = true;
+			break;
+		case 27:
+			exit(0);
+			break;
+	}
+}
+
+void	display_callback()
+{
+	//updates or resets the color buffer
+	glClear(GL_COLOR_BUFFER_BIT);
+	drawGrid(s.getScore());
+	s.updateSnake();
+	s.getFood().drawFood();
+	glutSwapBuffers();
+	if (gameOver)
+		EXIT;
 }
 
 void initGrid(int x, int y)
@@ -100,6 +134,12 @@ void drawGrid(t_score sc)
 	print(23, 39, 0, high);
 }
 
+void	timer_callback(int)
+{
+	glutPostRedisplay();
+	glutTimerFunc(1000 / s.getSpeed(), timer_callback, 0);
+}
+
 void	reshape_callback(int w, int h)
 {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
@@ -136,4 +176,34 @@ void drawUnit(int x, int y)
 
 	//ends the drawing of a particular geometric object
 	glEnd();
+}
+
+void	keyboard_special(int key, int, int)
+{
+	if (!gpause)
+	switch (key)
+	{
+		case GLUT_KEY_UP:
+			if (s.getDirection() != DOWN)
+				s.setDirection(UP);
+			break;
+		case GLUT_KEY_DOWN:
+			if (s.getDirection() != UP)
+				s.setDirection(DOWN);
+			break;
+		case GLUT_KEY_RIGHT:
+			if (s.getDirection() != LEFT)
+				s.setDirection(RIGHT);
+			break;
+		case GLUT_KEY_LEFT:
+			if (s.getDirection() != RIGHT)
+				s.setDirection(LEFT);
+			break;
+		case GLUT_KEY_ESC:
+			exit(0);
+			break;
+		defualt:
+			printf("pressed key: %d\n", key);
+			break;
+	}	
 }
